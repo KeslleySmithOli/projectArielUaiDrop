@@ -12,7 +12,7 @@ const ConversationListContainer = styled.div`
 const ConversationList: React.FC = () => {
   return (
     <ConversationListContainer>
-      <p>Conversa 1</p>
+      <p>Conversa 1.</p>
       <p>Conversa 2</p>
       <p>Conversa 3</p>
     </ConversationListContainer>
