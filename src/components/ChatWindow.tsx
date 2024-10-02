@@ -1,6 +1,14 @@
-import React from 'react';
-import { ChatWindowContainer , MessageArea , InputArea} from 'src/styles/ChatWindowStyles';
-
+import React from "react";
+import {
+  ChatWindowContainer,
+  MessageArea,
+  InputArea,
+  IconButton,
+  Input,
+} from "src/styles/ChatWindowStyles";
+import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import SendIcon from "@mui/icons-material/Send";
 
 const ChatWindow: React.FC = () => {
   return (
@@ -8,9 +16,18 @@ const ChatWindow: React.FC = () => {
       <MessageArea>
         <p>Mensagem de exemplo</p>
       </MessageArea>
+
       <InputArea>
-        <input type="text" placeholder="Digite sua mensagem..." style={{ flex: 1 }} />
-        <button>Enviar</button>
+        <IconButton>
+          <EmojiEmotionsIcon />
+        </IconButton>
+        <IconButton>
+          <AttachFileIcon />
+        </IconButton>
+        <Input type="text" placeholder="Digite sua mensagem..." />
+        <IconButton>
+          <SendIcon />
+        </IconButton>
       </InputArea>
     </ChatWindowContainer>
   );
