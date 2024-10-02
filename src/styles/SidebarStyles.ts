@@ -21,3 +21,11 @@ export const StyledIconButton = styled(IconButton)`
 export const Spacer = styled.div`
   flex-grow: 0.9; /* O spacer vai crescer para empurrar o último ícone para baixo */
 `;
+
+export const Divider = styled('div')({
+  width: '100%',
+  height: '2px',
+  backgroundColor: '#ccc',
+  margin: '25px 0',
+  borderRadius: '100%',
+});

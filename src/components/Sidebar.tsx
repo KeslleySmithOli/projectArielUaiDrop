@@ -6,6 +6,7 @@ import {
   SidebarContainer,
   Spacer,
   StyledIconButton,
+  Divider,
 } from "../styles/SidebarStyles";
 import TuneIcon from "@mui/icons-material/Tune";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
@@ -19,9 +20,11 @@ const Sidebar: React.FC = () => {
 
       <StyledIconButton aria-label="Ver Conversas">
         <Badge badgeContent={6} color="error">
-        <ChatIcon sx={{ color: "#00da00" }}></ChatIcon>
+        <ChatIcon sx={{ color: "#00a100" }}></ChatIcon>
         </Badge>
       </StyledIconButton>
+
+      <Divider/>
 
       <Spacer></Spacer>
 
@@ -30,7 +33,7 @@ const Sidebar: React.FC = () => {
       </StyledIconButton>
 
       <StyledIconButton aria-label="Settings">
-        <ToggleOnIcon fontSize="large" />
+        <ToggleOnIcon fontSize="large" sx={{ color: "#00a100" }} />
       </StyledIconButton>
     </SidebarContainer>
   );
