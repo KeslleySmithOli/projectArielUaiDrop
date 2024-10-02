@@ -5,8 +5,8 @@ export const ConversationListContainer = styled.div`
   width: 300px;
   background-color: #ffffff;
   padding: 10px;
-  border-left: 1px solid #ddd;
-  border-right: 1px solid #ddd;
+  border-left: 3px solid #f9f9f9;
+  border-right: 3px solid #f9f9f9;
 `;
 
 /** Título*/

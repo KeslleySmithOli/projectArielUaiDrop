@@ -25,7 +25,7 @@ export const Spacer = styled.div`
 export const Divider = styled('div')({
   width: '100%',
   height: '2px',
-  backgroundColor: '#ccc',
+  backgroundColor: '#f9f9f9',
   margin: '25px 0',
   borderRadius: '100%',
 });
