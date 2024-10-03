@@ -15,6 +15,7 @@ export const MessageArea = styled.div`
   padding: 10px;
   border: 1px solid #f9f9f9;
   border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 `;
 
