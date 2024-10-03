@@ -4,18 +4,18 @@ import {
   LoginForm,
   Input,
   Button,
-} from 'src/styles/LoginStyles';  // Ajuste o caminho conforme necessário
-import { useNavigate } from 'react-router-dom';  // Altere para useNavigate
+} from 'src/styles/LoginStyles';
+import { useNavigate } from 'react-router-dom'; 
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();  // Substitua useHistory por useNavigate
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui você pode adicionar lógica de autenticação, se necessário.
-    // Para o exemplo, vamos apenas redirecionar para a tela de chat.
+    // Aqui pode adicionar lógica de autenticação, se necessário.
+    // Para o exemplo, vou redirecionar para a tela de chat.
     if (username && password) {
       navigate('/chat');  // Redireciona para a tela de chat
     } else {
