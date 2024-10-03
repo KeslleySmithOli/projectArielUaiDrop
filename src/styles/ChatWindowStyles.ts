@@ -13,7 +13,9 @@ export const MessageArea = styled.div`
   flex: 1;
   background-color: #f9f9f9;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 `;
 

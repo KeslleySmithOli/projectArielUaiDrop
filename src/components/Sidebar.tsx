@@ -14,7 +14,11 @@ import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 const Sidebar: React.FC = () => {
   return (
     <SidebarContainer>
-      <StyledIconButton aria-label="Contatos">
+      <StyledIconButton aria-label="Contatos"sx={{ 
+    boxShadow: 'none', 
+    '&:hover': { boxShadow: 'none' }, 
+    '&:focus': { boxShadow: 'none' } 
+  }}>
         <ContactsIcon sx={{ color: "#000092" }} />
       </StyledIconButton>
 
