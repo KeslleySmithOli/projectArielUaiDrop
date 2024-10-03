@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import {
   ConversationListContainer,
   Title,
+  SearchBarContainer,
   SearchBar,
+  SearchIcon,
   ConversationItem,
   Avatar,
   ConversationDetails,
@@ -15,22 +17,22 @@ import {
 const conversations = [
   {
     id: 1,
-    name: 'Keslley Smith',
-    lastMessage: 'Eu quero saber o valor disso?',
+    name: 'Pavel Osipov',
+    lastMessage: 'I want to get the discount price.',
     time: '15:05',
     avatar: 'https://via.placeholder.com/40'
   },
   {
     id: 2,
-    name: 'Guilherme Oliveira',
-    lastMessage: 'Ok, até amanhã.',
+    name: 'Helen Peters',
+    lastMessage: 'Ok, thnx',
     time: '15:02',
     avatar: 'https://via.placeholder.com/40'
   },
   {
     id: 3,
-    name: 'Ariel Saulo',
-    lastMessage: 'Tudo bem?',
+    name: 'Sarah Creed',
+    lastMessage: 'Is it okay for you?',
     time: '14:55',
     avatar: 'https://via.placeholder.com/40'
   },
@@ -49,13 +51,16 @@ const ConversationList: React.FC = () => {
       {/* Título */}
       <Title>Contatos</Title>
       
-      {/* Barra de pesquisa */}
-      <SearchBar
-        type="text"
-        placeholder="Pesquisar conversas..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      {/* Barra de pesquisa com ícone */}
+      <SearchBarContainer>
+        <SearchIcon />
+        <SearchBar
+          type="text"
+          placeholder="Pesquisar conversas..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </SearchBarContainer>
 
       {/* Lista de conversas filtradas */}
       {filteredConversations.map(conversation => (

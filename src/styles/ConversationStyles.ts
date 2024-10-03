@@ -1,7 +1,13 @@
 import styled from 'styled-components';
+import { AiOutlineSearch } from 'react-icons/ai';
+import '@fontsource/roboto/400.css';  // Peso normal
+import '@fontsource/roboto/500.css';  // Peso médio
+import '@fontsource/roboto/700.css';  // Peso negrito
+
 
 
 export const ConversationListContainer = styled.div`
+  font-family: 'Roboto', sans-serif;
   display: flex;
   flex-direction: column;
   background-color: white;
@@ -14,18 +20,44 @@ export const ConversationListContainer = styled.div`
 `;
 
 export const Title = styled.h2`
+  font-family: 'Roboto', sans-serif; 
   font-size: 1.5rem;
   margin-bottom: 1rem;
 `;
 
-export const SearchBar = styled.input`
-  padding: 0.5rem;
+// Container da barra de pesquisa
+export const SearchBarContainer = styled.div`
+  position: relative;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+`;
+
+export const SearchBar = styled.input`
   width: 100%;
-  box-sizing: border-box;
+  padding: 0.5rem 1rem;
+  padding-left: 2.5rem;  /* Espaço para o ícone */
+  border: 1px solid #f9f9f9;
+  border-radius: 5px;  /* Bordas mais suaves */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f7f7f7;  /* Leve cor de fundo */
   font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;  /* Destaque ao focar */
+    background-color: white;  /* Mudança de cor ao focar */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);  /* Sombra ao focar */
+  }
+`;
+
+// Estilo do ícone de pesquisa
+export const SearchIcon = styled(AiOutlineSearch)`
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1.2rem;
 `;
 
 /** Container do corpo */
