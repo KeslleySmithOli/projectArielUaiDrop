@@ -1,8 +1,10 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
-import Sidebar from './components/Sidebar';
-import ConversationList from './components/ConversationList';
-import ChatWindow from './components/ChatWindow';
+import Login from './pages/Login'; // Ajuste o caminho conforme necessário
+import Sidebar from './components/Sidebar'; // Mantém a sidebar
+import ConversationList from './components/ConversationList'; // Mantém a lista de conversas
+import ChatWindow from './components/ChatWindow'; // Mantém a janela de chat
 
 const AppContainer = styled.div`
   display: flex;
@@ -11,11 +13,21 @@ const AppContainer = styled.div`
 
 const App: React.FC = () => {
   return (
-    <AppContainer>
-      <Sidebar />
-      <ConversationList />
-      <ChatWindow />
-    </AppContainer>
+    <Router>
+      <Routes>
+        {/* Rota para a tela de login */}
+        <Route path="/" element={<Login />} />
+
+        {/* Rota para a tela de chat */}
+        <Route path="/chat" element={
+          <AppContainer>
+            <Sidebar />
+            <ConversationList />
+            <ChatWindow />
+          </AppContainer>
+        } />
+      </Routes>
+    </Router>
   );
 };
 
