@@ -20,15 +20,15 @@ import SendIcon from "@mui/icons-material/Send";
 const messages = [
   {
     id: 1,
-    name: "Pavel Osipov",
-    text: "Hey there, I want to buy one of your amazing handmade items!",
+    name: "Keslley Smith",
+    text: "E aí, tudo joia? Queria o meu código de acesso",
     time: "15:05",
     avatar: "https://via.placeholder.com/40",
   },
   {
     id: 2,
-    name: "Elena Konstantinova",
-    text: "Sure. You can choose one of three colors: purple, green, or cranberry red.",
+    name: "Keslley Smith",
+    text: "Falaram que ia mandar ontem, porém, até agora não chegou",
     time: "15:06",
     avatar: "https://via.placeholder.com/40",
   },
