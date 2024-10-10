@@ -4,29 +4,32 @@ import {
   LoginForm,
   Input,
   Button,
+  ErrorMessage,
+  Logo,
 } from 'src/styles/LoginStyles';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
+import uaiLogo from '../assets/uaiLogo.png';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Aqui pode adicionar lógica de autenticação, se necessário.
-    // Para o exemplo, vou redirecionar para a tela de chat.
     if (username && password) {
       navigate('/chat');  // Redireciona para a tela de chat
     } else {
-      alert('Por favor, preencha todos os campos.');
+      setError('Por favor, preencha todos os campos.');
     }
   };
 
   return (
     <LoginContainer>
       <LoginForm onSubmit={handleLogin}>
-        <h2>Login</h2>
+        <Logo src={uaiLogo} alt="Logo" /> {/* Adicione o logo aqui */}
+        {error && <ErrorMessage>{error}</ErrorMessage>}
         <Input
           type="text"
           placeholder="Usuário"

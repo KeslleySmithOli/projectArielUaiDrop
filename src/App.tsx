@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar'; // Mantém a sidebar
 import ConversationList from './components/ConversationList'; // Mantém a lista de conversas
 import ChatWindow from './components/ChatWindow'; // Mantém a janela de chat
 import FlowEditor from './pages/FlowEditor';
+import GlobalStyle from './styles/GlobalStyle';
 
 const AppContainer = styled.div`
   display: flex;
@@ -15,6 +16,7 @@ const AppContainer = styled.div`
 const App: React.FC = () => {
   return (
     <Router>
+      <GlobalStyle />
       <Routes>
         {/* Rota para a tela de login */}
         <Route path="/" element={<Login />} />
