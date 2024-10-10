@@ -12,25 +12,20 @@ import TuneIcon from "@mui/icons-material/Tune";
 import ToggleOnIcon from "@mui/icons-material/ToggleOn";
 import FlowChartIcon from "@mui/icons-material/ShowChart";
 import { Link } from "react-router-dom";
-import QrCodeIcon from "@mui/icons-material/QrCode";
 
 const Sidebar: React.FC = () => {
   return (
     <SidebarContainer>
-      <Link to="/Contact" style={{ textDecoration: "none" }}>
-        {" "}
-        {/* Link para a página de contatos */}
-        <StyledIconButton
-          aria-label="Contatos"
-          sx={{
-            boxShadow: "none",
-            "&:hover": { boxShadow: "none" },
-            "&:focus": { boxShadow: "none" },
-          }}
-        >
-          <ContactsIcon sx={{ color: "#000092" }} />
-        </StyledIconButton>
-      </Link>
+      <StyledIconButton
+        aria-label="Contatos"
+        sx={{
+          boxShadow: "none",
+          "&:hover": { boxShadow: "none" },
+          "&:focus": { boxShadow: "none" },
+        }}
+      >
+        <ContactsIcon sx={{ color: "#000092" }} />
+      </StyledIconButton>
 
       <StyledIconButton aria-label="Ver Conversas">
         <Badge badgeContent={6} color="error">
@@ -41,16 +36,6 @@ const Sidebar: React.FC = () => {
       <Divider />
 
       <Spacer></Spacer>
-
-      <StyledIconButton>
-        <Link to="/qr-code" style={{ textDecoration: "none" }}>
-          {" "}
-          {/* Link para o QR Code */}
-          <StyledIconButton aria-label="Ler QR Code">
-            <QrCodeIcon sx={{ color: "#000092" }} />
-          </StyledIconButton>
-        </Link>
-      </StyledIconButton>
 
       <StyledIconButton>
         <Link to="/flows" style={{ textDecoration: "none" }}>
