@@ -1,11 +1,13 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import styled from "styled-components";
-import Login from "./pages/Login"; // Ajuste o caminho conforme necessário
-import Sidebar from "./components/Sidebar"; // Mantém a sidebar
-import ConversationList from "./components/ConversationList"; // Mantém a lista de conversas
-import ChatWindow from "./components/ChatWindow"; // Mantém a janela de chat
-import FlowEditor from "./pages/FlowEditor";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import styled from 'styled-components';
+import Login from './pages/Login';
+import Sidebar from './components/Sidebar'; 
+import ConversationList from './components/ConversationList'; 
+import ChatWindow from './components/ChatWindow'; 
+import FlowEditor from './pages/FlowEditor';
+import GlobalStyle from './styles/GlobalStyle';
+import Contacts from './components/Contact'; // Certifique-se de que o caminho está correto
 
 const AppContainer = styled.div`
   display: flex;
@@ -15,21 +17,27 @@ const AppContainer = styled.div`
 const App: React.FC = () => {
   return (
     <Router>
+      <GlobalStyle />
       <Routes>
-        {/* Rota para a tela de login */}
         <Route path="/" element={<Login />} />
         <Route path="/flows" element={<FlowEditor />} />
+        
         {/* Rota para a tela de chat */}
-        <Route
-          path="/chat"
-          element={
-            <AppContainer>
-              <Sidebar />
-              <ConversationList />
-              <ChatWindow />
-            </AppContainer>
-          }
-        />
+        <Route path="/chat" element={
+          <AppContainer>
+            <Sidebar />
+            <ConversationList />
+            <ChatWindow />
+          </AppContainer>
+        } />
+
+        {/* Rota para a tela de contatos */}
+        <Route path="/contacts" element={
+          <AppContainer>
+            <Sidebar />
+            <Contacts /> {/* Aqui você renderiza o componente de contatos */}
+          </AppContainer>
+        } />
       </Routes>
     </Router>
   );
