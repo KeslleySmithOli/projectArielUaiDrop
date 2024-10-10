@@ -5,13 +5,13 @@ export const ChatWindowContainer = styled.div`
   padding: 20px;
   display: flex;
   flex-direction: column;
+  background-color: #f5f5f5; // Fundo mais claro para a janela de chat
 `;
 
 export const MessageArea = styled.div`
   flex: 1;
-  background-color: #f9f9f9;
   padding: 10px;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow-y: auto;
 `;
 
@@ -19,11 +19,10 @@ export const InputArea = styled.div`
   margin-top: 10px;
   display: flex;
   gap: 10px;
-  border-radius: 20px; // Bordas mais arredondadas
-  background-color: #f9f9f9;
-  padding: 5px;
-  align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); // Sombra mais suave
+  border-radius: 20px;
+  background-color: #ffffff; // Fundo branco para a área de entrada
+  padding: 10px; // Espaçamento interno
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Sombra mais suave
 `;
 
 export const Input = styled.input`
@@ -32,7 +31,8 @@ export const Input = styled.input`
   outline: none;
   font-size: 16px;
   padding: 10px;
-  background-color: transparent; // Fundo transparente para integrar com a área
+  border-radius: 20px; // Bordas arredondadas
+  background-color: #f5f5f5; // Fundo cinza claro
 `;
 
 export const IconButton = styled.button`
@@ -42,10 +42,10 @@ export const IconButton = styled.button`
   display: flex;
   align-items: center;
   padding: 5px;
-  color: #757575; // Ícones cinza médio
+  color: #757575;
 
   &:hover {
-    color: #000; // Escurece ao passar o mouse
+    color: #000;
   }
 `;
 
@@ -54,21 +54,22 @@ export const ConversationContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 10px;
-  overflow-y: auto; // Permite rolagem vertical
+  overflow-y: auto;
   background-color: #f9f9f9;
 `;
 
-export const MessageBubble = styled.div`
+export const MessageBubble = styled.div<{ sender: boolean }>`
   display: flex;
   align-items: flex-start;
-  margin-bottom: 10px; // Espaçamento entre mensagens
+  margin-bottom: 10px;
+  justify-content: ${({ sender }) => (sender ? "flex-end" : "flex-start")}; // Alinha a mensagem à direita ou esquerda
 `;
 
 export const Avatar = styled.img`
-width: "36px",
-height: "36px",
-borderRadius: "50%",
-marginRight: "8px",
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin-right: 8px;
 `;
 
 export const MessageContent = styled.div`
@@ -77,21 +78,23 @@ export const MessageContent = styled.div`
 `;
 
 export const UserName = styled.span`
-fontSize: "14px",
-fontWeight: 500,
-color: "#fff",
-marginBottom: "4px",
+  font-size: 14px;
+  font-weight: 500;
+  color: #333; // Cor mais escura para o nome
+  margin-bottom: 4px;
 `;
 
-export const MessageText = styled.span`
-  background-color: #ffffff; // Fundo branco para a mensagem
+export const MessageText = styled.span<{ sender: boolean }>`
+  background-color: ${({ sender }) => (sender ? "#dcf8c6" : "#fff")}; // Fundo verde para o usuário, branco para o bot
   padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); // Sombra leve
+  border-radius: 15px; // Bordas mais arredondadas
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); // Sombra leve
+  max-width: 70%; // Largura máxima do balão
+  word-wrap: break-word; // Quebra de palavras longas
 `;
 
 export const MessageTime = styled.span`
   font-size: 0.8rem;
-  color: #999; // Cor mais clara para o horário
-  margin-top: 5px; // Espaço entre a mensagem e o horário
+  color: #999;
+  margin-top: 5px;
 `;

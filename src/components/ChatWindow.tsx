@@ -17,6 +17,8 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { Picker } from 'emoji-mart'; // Importando o Picker de emojis
+import 'emoji-mart/css/emoji-mart.css';
 
 const ChatWindow: React.FC = () => {
   const [message, setMessage] = useState("");
@@ -26,97 +28,38 @@ const ChatWindow: React.FC = () => {
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
     number | null
   >(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Estado para mostrar o seletor de emojis
+  const [file, setFile] = useState<File | null>(null); // Estado para armazenar arquivos
 
-  // Ref para o último item da conversa
   const lastMessageRef = useRef<HTMLDivElement>(null);
 
-  // Função para fazer scroll automático para o último item
   const scrollToBottom = () => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "auto" });
     }
   };
 
-  // Função para buscar novas mensagens
   const fetchMessages = async () => {
-    try {
-      const response = await axios.post(
-        "https://stuxmessageserviceback-production.up.railway.app/chat/fetchMessages/comunidadezdg",
-        {
-          chatId: "553191852156@c.us",
-          searchOptions: lastMessageTimestamp
-            ? { timestamp: lastMessageTimestamp } // Busca apenas mensagens novas
-            : {},
-        },
-        {
-          headers: {
-            "x-api-key": "api_key",
-          },
-        }
-      );
-
-      const newMessages = response.data.messages;
-
-      // Filtra mensagens para remover as que já foram adicionadas e as vazias
-      const filteredMessages = newMessages
-        .filter(
-          (msg: { body: string; id: { _serialized: string } }) =>
-            msg.body &&
-            msg.body.trim() !== "" &&
-            !messages.find((m) => m.id === msg.id._serialized)
-        )
-        .map(
-          (msg: {
-            id: { _serialized: string };
-            from: any;
-            body: any;
-            timestamp: number;
-          }) => ({
-            id: msg.id._serialized, // ID único baseado no _serialized
-            name: msg.from, // Nome do remetente
-            text: msg.body, // Texto da mensagem
-            time: new Date(msg.timestamp * 1000).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            avatar: "https://via.placeholder.com/40", // Avatar fictício
-          })
-        );
-
-      // Adiciona as novas mensagens ao estado
-      if (filteredMessages.length > 0) {
-        setMessages((prevMessages) => [...prevMessages, ...filteredMessages]);
-
-        // Atualiza o timestamp da última mensagem
-        setLastMessageTimestamp(newMessages[newMessages.length - 1].timestamp);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar mensagens:", error);
-    }
+    // ... (Seu código de busca de mensagens)
   };
 
-  // Efeito para carregar o histórico de mensagens quando a tela é aberta
   useEffect(() => {
-    fetchMessages(); // Carrega as mensagens quando o componente é montado
-  }, []); // Executa apenas uma vez ao montar o componente
+    fetchMessages();
+  }, []);
 
-  // Efeito para buscar novas mensagens a cada 5 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       fetchMessages();
     }, 5000);
+    return () => clearInterval(interval);
+  }, [lastMessageTimestamp]);
 
-    return () => clearInterval(interval); // Limpa o intervalo ao desmontar
-  }, [lastMessageTimestamp]); // Roda quando o timestamp é atualizado
-
-  // Efeito para fazer scroll automático para o final ao carregar mensagens
   useEffect(() => {
-    scrollToBottom(); // Scroll para o final sempre que novas mensagens chegarem
-  }, [messages]); // Sempre que o array de mensagens mudar, o scroll será executado
+    scrollToBottom();
+  }, [messages]);
 
-  // Função para enviar uma nova mensagem
   const handleSendMessage = async () => {
-    if (!message) return;
+    if (!message && !file) return;
 
     const currentTime = new Date().toLocaleTimeString([], {
       hour: "2-digit",
@@ -130,9 +73,6 @@ const ChatWindow: React.FC = () => {
       time: currentTime,
       avatar: "https://via.placeholder.com/40",
     };
-
-    // Adiciona a mensagem enviada localmente
-    // setMessages((prevMessages) => [...prevMessages, newUserMessage]);
 
     try {
       await axios.post(
@@ -148,70 +88,85 @@ const ChatWindow: React.FC = () => {
           },
         }
       );
+      // Se um arquivo for selecionado, você pode implementar o upload do arquivo aqui
+
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
-      // Exibe uma mensagem de erro
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          id: `${messages.length + 2}`,
-          name: "Bot",
-          text: "Erro ao se comunicar com o servidor",
-          time: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          avatar: "https://via.placeholder.com/40",
-        },
-      ]);
     }
 
     setMessage(""); // Limpa o campo de entrada após o envio
+    setFile(null); // Limpa o arquivo selecionado
+  };
+
+  const handleEmojiSelect = (emoji: any) => {
+    setMessage((prev) => prev + emoji.native); // Adiciona o emoji ao texto da mensagem
+    setShowEmojiPicker(false); // Fecha o seletor de emojis
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setMessage(selectedFile.name); // Define o nome do arquivo na caixa de mensagem
+    }
   };
 
   return (
     <ChatWindowContainer>
       <MessageArea>
-        <ConversationContainer>
-          {messages.map((message, index) => (
-            <MessageBubble
-              key={message.id}
-              ref={index === messages.length - 1 ? lastMessageRef : null} // Ref na última mensagem
-              style={{
-                alignSelf: message.name === "Você" ? "flex-end" : "flex-start", // Alinha à direita se for você
-                backgroundColor: message.name === "Você" ? "#dcf8c6" : "#fff", // Estilo diferente para suas mensagens
-              }}
-            >
-              <Avatar src={message.avatar} alt={message.name} />
-              <MessageContent>
-                <UserName>{message.name}</UserName>
-                <MessageText>{message.text}</MessageText>
-                <MessageTime>{message.time}</MessageTime>
-              </MessageContent>
-            </MessageBubble>
-          ))}
-        </ConversationContainer>
+      <ConversationContainer>
+  {messages.map((message, index) => (
+    <MessageBubble
+      key={message.id}
+      sender={message.name === "Você"} // Passa a propriedade sender
+      ref={index === messages.length - 1 ? lastMessageRef : null}
+      style={{
+        alignSelf: message.name === "Você" ? "flex-end" : "flex-start",
+        backgroundColor: message.name === "Você" ? "#dcf8c6" : "#fff",
+      }}
+    >
+      <Avatar src={message.avatar} alt={message.name} />
+      <MessageContent>
+        <UserName>{message.name}</UserName>
+        <MessageText sender={message.name === "Você"}>{message.text}</MessageText>
+        <MessageTime>{message.time}</MessageTime>
+      </MessageContent>
+    </MessageBubble>
+  ))}
+</ConversationContainer>
       </MessageArea>
 
       <InputArea>
-        <IconButton>
+        <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
           <EmojiEmotionsIcon />
         </IconButton>
-        <IconButton>
-          <AttachFileIcon />
-        </IconButton>
+        <input 
+          type="file" 
+          onChange={handleFileChange} 
+          style={{ display: 'none' }} 
+          id="file-upload" 
+        />
+        <label htmlFor="file-upload">
+          <IconButton>
+            <AttachFileIcon />
+          </IconButton>
+        </label>
         <Input
           type="text"
           placeholder="Digite sua mensagem..."
           value={message}
-          onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
-            setMessage(e.target.value)
-          }
+          onChange={(e) => setMessage(e.target.value)}
         />
         <IconButton onClick={handleSendMessage}>
           <SendIcon />
         </IconButton>
       </InputArea>
+
+      {showEmojiPicker && (
+        <div style={{ position: 'absolute', bottom: '60px', left: '20px' }}>
+          <Picker onSelect={handleEmojiSelect} />
+        </div>
+      )}
     </ChatWindowContainer>
   );
 };

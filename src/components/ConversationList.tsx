@@ -49,7 +49,7 @@ const ConversationList: React.FC = () => {
   return (
     <ConversationListContainer>
       {/* Título */}
-      <Title>Contatos</Title>
+      <Title>Conversas</Title>
       
       {/* Barra de pesquisa com ícone */}
       <SearchBarContainer>
