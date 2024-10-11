@@ -95,7 +95,7 @@ const ChatWindow: React.FC<Props> = ({
           )
           .map(async (msg: any) => ({
             id: msg.id._serialized,
-            name: msg.fromMe ? "Você" : contactName, // Usa o nome do contato para mensagens recebidas
+            name: msg.fromMe ? "Você" : contactName,
             text: msg.body,
             time: new Date(msg.timestamp * 1000).toLocaleTimeString([], {
               hour: "2-digit",
@@ -103,7 +103,7 @@ const ChatWindow: React.FC<Props> = ({
             }),
             avatar: msg.fromMe
               ? myProfilePicUrl.current
-              : await fetchProfilePic(msg.id.remote), // Usa a foto do remetente ou sua própria foto
+              : await fetchProfilePic(msg.id.remote),
             fromMe: msg.fromMe,
           }))
       );
@@ -121,7 +121,7 @@ const ChatWindow: React.FC<Props> = ({
     setMessages([]);
     setLastMessageTimestamp(null);
     fetchMyProfilePic();
-    fetchMessages(); // Buscar as mensagens para o novo chat
+    fetchMessages();
   }, [chatId]);
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const ChatWindow: React.FC<Props> = ({
   }, [lastMessageTimestamp]);
 
   useEffect(() => {
-    scrollToBottom(); // Faz o scroll para o final quando as mensagens mudam
+    scrollToBottom();
   }, [messages]);
 
   const handleSendMessage = async (
@@ -140,7 +140,7 @@ const ChatWindow: React.FC<Props> = ({
   ) => {
     if (!message || !chatId) return;
 
-    if ("key" in e && e.key !== "Enter") return; // Só envia se a tecla for Enter
+    if ("key" in e && e.key !== "Enter") return;
 
     try {
       await axios.post(
@@ -157,7 +157,7 @@ const ChatWindow: React.FC<Props> = ({
           hour: "2-digit",
           minute: "2-digit",
         }),
-        avatar: myProfilePicUrl.current, // Usa a sua foto de perfil
+        avatar: myProfilePicUrl.current,
         fromMe: true,
       };
 
@@ -185,7 +185,7 @@ const ChatWindow: React.FC<Props> = ({
               >
                 <Avatar src={message.avatar} alt={message.name} />
                 <MessageContent>
-                  <UserName>{message.fromMe ? "Você" : contactName}</UserName>{" "}
+                  <UserName>{message.fromMe ? "Você" : message.name}</UserName>{" "}
                   {/* Nome do remetente */}
                   <MessageText>{message.text}</MessageText>
                   <MessageTime>{message.time}</MessageTime>

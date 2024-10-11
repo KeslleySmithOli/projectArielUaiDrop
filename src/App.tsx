@@ -12,35 +12,37 @@ import ConversationList from "./components/ConversationList";
 import ChatWindow from "./components/ChatWindow";
 import FlowEditor from "./pages/FlowEditor";
 import GlobalStyle from "./styles/GlobalStyle";
-import Contacts from "./components/Contacts"; // Certifique-se de que o caminho está correto
+import Contacts from "./components/Contacts";
 
 const AppContainer = styled.div`
   display: flex;
   height: 100vh;
 `;
 
-// Componente intermediário para capturar o chatId da URL e passar para o ChatWindow
 const ChatPage: React.FC = () => {
   const { chatId } = useParams<{ chatId: string }>();
   const [selectedContactName, setSelectedContactName] = useState<string>("");
 
-  // Função para lidar com a seleção de conversas na ConversationList
   const handleSelectConversation = (id: string, name: string) => {
     setSelectedContactName(name);
-    // Navega para a URL da conversa selecionada (outra forma de navegação programática pode ser implementada)
   };
+
+  const myPhoneNumber = "your-phone-number"; // Defina seu número aqui
 
   return (
     <AppContainer>
       <Sidebar />
       <ConversationList onSelectConversation={handleSelectConversation} />
-      {/* Passa o chatId e contactName como props para o ChatWindow */}
-      {chatId && (
+      {chatId ? (
         <ChatWindow
           chatId={chatId}
           contactName={selectedContactName}
-          myPhoneNumber="554797054058@c.us" // Altere para o número real do usuário
+          myPhoneNumber={myPhoneNumber}
         />
+      ) : (
+        <div style={{ flex: 1, textAlign: "center", padding: "20px" }}>
+          Selecione uma conversa para começar o chat
+        </div>
       )}
     </AppContainer>
   );
@@ -59,7 +61,7 @@ const App: React.FC = () => {
           element={
             <AppContainer>
               <Sidebar />
-              <Contacts /> {/* Aqui você renderiza o componente de contatos */}
+              <Contacts />
             </AppContainer>
           }
         />

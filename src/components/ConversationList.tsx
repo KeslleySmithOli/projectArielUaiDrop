@@ -13,6 +13,7 @@ import {
   Time,
 } from "src/styles/ConversationStyles";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 
 interface ConversationListProps {
   onSelectConversation: (id: string, name: string) => void;
@@ -23,6 +24,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [conversations, setConversations] = useState<any[]>([]);
+  const navigate = useNavigate(); // Hook para navegação
 
   const fetchProfilePic = async (contactId: string) => {
     try {
@@ -75,6 +77,14 @@ const ConversationList: React.FC<ConversationListProps> = ({
     fetchConversations();
   }, []);
 
+  const handleConversationClick = (
+    conversationId: string,
+    contactName: string
+  ) => {
+    onSelectConversation(conversationId, contactName); // Atualiza o estado
+    navigate(`/chat/${conversationId}`); // Navega para o novo chat
+  };
+
   const filteredConversations = conversations.filter((conversation) =>
     conversation.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -96,8 +106,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
         <ConversationItem
           key={conversation.id}
           onClick={() =>
-            onSelectConversation(conversation.id, conversation.name)
-          }
+            handleConversationClick(conversation.id, conversation.name)
+          } // Chama a navegação e seleção de chat
         >
           <Avatar src={conversation.avatar} alt={conversation.name} />
           <ConversationDetails>
