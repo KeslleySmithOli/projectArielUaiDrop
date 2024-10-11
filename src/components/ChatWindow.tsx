@@ -17,81 +17,99 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
-import { useParams } from "react-router-dom"; // Para pegar o chatId
 
-type Message = {
+interface Message {
   id: string;
   name: string;
   text: string;
   time: string;
   avatar: string;
   fromMe: boolean;
-};
+}
 
-const ChatWindow: React.FC = () => {
-  const { chatId } = useParams<{ chatId: string }>(); // Pega o chatId da URL
-  const [message, setMessage] = useState<string>("");
-  const [messages, setMessages] = useState<{ [key: string]: Message[] }>({}); // Mensagens separadas por chatId
+interface Props {
+  chatId: string;
+  contactName: string;
+  myPhoneNumber: string;
+}
+
+const ChatWindow: React.FC<Props> = ({
+  chatId,
+  contactName,
+  myPhoneNumber,
+}) => {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Message[]>([]);
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
-    number | null
+    null | number
   >(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const myProfilePicUrl = useRef<string>("https://via.placeholder.com/40");
 
-  // Função para fazer scroll até o final
   const scrollToBottom = () => {
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "auto" });
     }
   };
 
-  // Função para buscar mensagens
-  const fetchMessages = async () => {
-    if (!chatId) return; // Verifica se o chatId está definido
+  const fetchProfilePic = async (contactId: string): Promise<string> => {
+    try {
+      const response = await axios.post(
+        "https://stuxmessageserviceback-production.up.railway.app/client/getProfilePicUrl/comunidadezdg",
+        { contactId },
+        { headers: { "x-api-key": "api_key" } }
+      );
+      return response.data.success
+        ? response.data.result
+        : "https://via.placeholder.com/40";
+    } catch (error) {
+      console.error("Erro ao buscar a foto do perfil:", error);
+      return "https://via.placeholder.com/40";
+    }
+  };
 
+  const fetchMyProfilePic = async () => {
+    myProfilePicUrl.current = await fetchProfilePic(myPhoneNumber);
+  };
+
+  const fetchMessages = async () => {
     try {
       const response = await axios.post(
         "https://stuxmessageserviceback-production.up.railway.app/chat/fetchMessages/comunidadezdg",
         {
-          chatId, // Usa o chatId da URL para buscar mensagens dessa conversa
+          chatId,
           searchOptions: lastMessageTimestamp
             ? { timestamp: lastMessageTimestamp }
             : {},
         },
-        {
-          headers: {
-            "x-api-key": "api_key",
-          },
-        }
+        { headers: { "x-api-key": "api_key" } }
       );
 
       const newMessages = response.data.messages;
 
-      // Filtrar mensagens duplicadas e mapear as novas
-      const filteredMessages = newMessages
-        .filter(
-          (msg: any) =>
-            msg.body &&
-            !messages[chatId]?.find((m) => m.id === msg.id._serialized)
-        )
-        .map((msg: any) => ({
-          id: msg.id._serialized,
-          name: msg.from,
-          text: msg.body,
-          time: new Date(msg.timestamp * 1000).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          avatar: "https://via.placeholder.com/40",
-          fromMe: msg.fromMe,
-        }));
+      const filteredMessages = await Promise.all(
+        newMessages
+          .filter(
+            (msg: any) =>
+              msg.body && !messages.find((m) => m.id === msg.id._serialized)
+          )
+          .map(async (msg: any) => ({
+            id: msg.id._serialized,
+            name: msg.fromMe ? "Você" : contactName, // Usa o nome do contato para mensagens recebidas
+            text: msg.body,
+            time: new Date(msg.timestamp * 1000).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            avatar: msg.fromMe
+              ? myProfilePicUrl.current
+              : await fetchProfilePic(msg.id.remote), // Usa a foto do remetente ou sua própria foto
+            fromMe: msg.fromMe,
+          }))
+      );
 
-      // Adicionar as novas mensagens ao estado da conversa específica (por chatId)
       if (filteredMessages.length > 0) {
-        setMessages((prevMessages) => ({
-          ...prevMessages,
-          [chatId]: [...(prevMessages[chatId] || []), ...filteredMessages],
-        }));
-
+        setMessages((prevMessages) => [...prevMessages, ...filteredMessages]);
         setLastMessageTimestamp(newMessages[newMessages.length - 1].timestamp);
       }
     } catch (error) {
@@ -100,47 +118,38 @@ const ChatWindow: React.FC = () => {
   };
 
   useEffect(() => {
-    if (chatId) {
-      fetchMessages();
-    }
-  }, [chatId]); // Recarrega mensagens quando o chatId mudar
+    setMessages([]);
+    setLastMessageTimestamp(null);
+    fetchMyProfilePic();
+    fetchMessages(); // Buscar as mensagens para o novo chat
+  }, [chatId]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (chatId) {
-        fetchMessages();
-      }
+      fetchMessages();
     }, 5000);
     return () => clearInterval(interval);
-  }, [lastMessageTimestamp, chatId]);
+  }, [lastMessageTimestamp]);
 
   useEffect(() => {
-    if (chatId && messages[chatId]) {
-      scrollToBottom();
-    }
-  }, [chatId, messages]); // Faz o scroll para o final sempre que novas mensagens chegarem
+    scrollToBottom(); // Faz o scroll para o final quando as mensagens mudam
+  }, [messages]);
 
-  // Função para enviar mensagem
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (
+    e: React.KeyboardEvent<HTMLInputElement> | React.MouseEvent
+  ) => {
     if (!message || !chatId) return;
+
+    if ("key" in e && e.key !== "Enter") return; // Só envia se a tecla for Enter
 
     try {
       await axios.post(
         "https://stuxmessageserviceback-production.up.railway.app/client/sendMessage/comunidadezdg",
-        {
-          chatId,
-          contentType: "string",
-          content: message,
-        },
-        {
-          headers: {
-            "x-api-key": "api_key",
-          },
-        }
+        { chatId, contentType: "string", content: message },
+        { headers: { "x-api-key": "api_key" } }
       );
 
-      // Adiciona a mensagem enviada localmente ao estado
-      const newMessage = {
+      const newMessage: Message = {
         id: `${Date.now()}`,
         name: "Você",
         text: message,
@@ -148,14 +157,11 @@ const ChatWindow: React.FC = () => {
           hour: "2-digit",
           minute: "2-digit",
         }),
-        avatar: "https://via.placeholder.com/40",
+        avatar: myProfilePicUrl.current, // Usa a sua foto de perfil
         fromMe: true,
       };
 
-      setMessages((prevMessages) => ({
-        ...prevMessages,
-        [chatId]: [...(prevMessages[chatId] || []), newMessage],
-      }));
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       setMessage(""); // Limpa o campo de entrada após o envio
     } catch (error) {
@@ -167,31 +173,27 @@ const ChatWindow: React.FC = () => {
     <ChatWindowContainer>
       <MessageArea>
         <ConversationContainer>
-          {chatId && messages[chatId] && messages[chatId].length > 0 ? ( // Verifica se existem mensagens para o chatId
-            messages[chatId].map((message: Message, index: number) => (
+          {messages.length > 0 ? (
+            messages.map((message, index) => (
               <MessageBubble
                 key={message.id}
-                ref={
-                  index === messages[chatId].length - 1 ? lastMessageRef : null
-                }
+                ref={index === messages.length - 1 ? lastMessageRef : null}
                 style={{
-                  alignSelf:
-                    message.fromMe === true ? "flex-end" : "flex-start",
-                  backgroundColor: message.fromMe === true ? "#dcf8c6" : "#fff",
+                  alignSelf: message.fromMe ? "flex-end" : "flex-start",
+                  backgroundColor: message.fromMe ? "#dcf8c6" : "#fff",
                 }}
               >
                 <Avatar src={message.avatar} alt={message.name} />
                 <MessageContent>
-                  <UserName>
-                    {message.fromMe === true ? "Você" : message.name}
-                  </UserName>
+                  <UserName>{message.fromMe ? "Você" : contactName}</UserName>{" "}
+                  {/* Nome do remetente */}
                   <MessageText>{message.text}</MessageText>
                   <MessageTime>{message.time}</MessageTime>
                 </MessageContent>
               </MessageBubble>
             ))
           ) : (
-            <div>Nenhuma mensagem ainda</div> // Mensagem de fallback quando não há mensagens
+            <div>Nenhuma mensagem ainda</div>
           )}
         </ConversationContainer>
       </MessageArea>
@@ -208,6 +210,7 @@ const ChatWindow: React.FC = () => {
           placeholder="Digite sua mensagem..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleSendMessage}
         />
         <IconButton onClick={handleSendMessage}>
           <SendIcon />
