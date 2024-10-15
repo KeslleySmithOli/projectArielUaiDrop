@@ -17,6 +17,8 @@ import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { Picker } from "emoji-mart"; // Importando o Picker de emojis
+import "emoji-mart/css/emoji-mart.css";
 
 interface Message {
   id: string;
@@ -43,6 +45,9 @@ const ChatWindow: React.FC<Props> = ({
   const [lastMessageTimestamp, setLastMessageTimestamp] = useState<
     null | number
   >(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false); // Estado para mostrar o seletor de emojis
+  const [file, setFile] = useState<File | null>(null); // Estado para armazenar arquivos
+
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const myProfilePicUrl = useRef<string>("https://via.placeholder.com/40");
 
@@ -164,8 +169,23 @@ const ChatWindow: React.FC<Props> = ({
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       setMessage(""); // Limpa o campo de entrada após o envio
+      // Se um arquivo for selecionado, você pode implementar o upload do arquivo aqui
     } catch (error) {
       console.error("Erro ao enviar mensagem:", error);
+    }
+    setFile(null); // Limpa o arquivo selecionado
+  };
+
+  const handleEmojiSelect = (emoji: any) => {
+    setMessage((prev) => prev + emoji.native); // Adiciona o emoji ao texto da mensagem
+    setShowEmojiPicker(false); // Fecha o seletor de emojis
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setMessage(selectedFile.name); // Define o nome do arquivo na caixa de mensagem
     }
   };
 
@@ -199,23 +219,39 @@ const ChatWindow: React.FC<Props> = ({
       </MessageArea>
 
       <InputArea>
-        <IconButton>
+        <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
           <EmojiEmotionsIcon />
         </IconButton>
-        <IconButton>
-          <AttachFileIcon />
-        </IconButton>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+          id="file-upload"
+        />
+        <label htmlFor="file-upload">
+          <IconButton>
+            <AttachFileIcon />
+          </IconButton>
+        </label>
         <Input
           type="text"
           placeholder="Digite sua mensagem..."
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e: { target: { value: React.SetStateAction<string> } }) =>
+            setMessage(e.target.value)
+          }
           onKeyDown={handleSendMessage}
         />
         <IconButton onClick={handleSendMessage}>
           <SendIcon />
         </IconButton>
       </InputArea>
+
+      {showEmojiPicker && (
+        <div style={{ position: "absolute", bottom: "60px", left: "20px" }}>
+          <Picker onSelect={handleEmojiSelect} />
+        </div>
+      )}
     </ChatWindowContainer>
   );
 };

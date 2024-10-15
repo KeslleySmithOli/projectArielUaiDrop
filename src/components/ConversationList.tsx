@@ -91,7 +91,10 @@ const ConversationList: React.FC<ConversationListProps> = ({
 
   return (
     <ConversationListContainer>
+      {/* Título */}
       <Title>Contatos</Title>
+
+      {/* Barra de pesquisa com ícone */}
       <SearchBarContainer>
         <SearchIcon />
         <SearchBar

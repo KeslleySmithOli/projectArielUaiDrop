@@ -13,6 +13,7 @@ import ChatWindow from "./components/ChatWindow";
 import FlowEditor from "./pages/FlowEditor";
 import GlobalStyle from "./styles/GlobalStyle";
 import Contacts from "./components/Contacts";
+import "emoji-mart/css/emoji-mart.css";
 
 const AppContainer = styled.div`
   display: flex;
