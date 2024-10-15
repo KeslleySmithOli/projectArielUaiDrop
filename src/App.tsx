@@ -61,26 +61,26 @@ const App: React.FC = () => {
     <Router>
       <GlobalStyle />
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/flows" element={<FlowEditor />} />
-        <Route path="/chat/:chatId" element={<ChatPage />} />
-        <Route
-          path="/contacts"
-          element={
-            <MainLayout>
-              <Contacts />
-            </MainLayout>
-          }
-        />
-        <Route
-           path="/settings"
-           element={
-             <MainLayout>
-               <SettingsPage />
-             </MainLayout>
-           }
-        />
-      </Routes>
+  <Route path="/" element={<Login />} />
+  <Route path="/flows" element={<FlowEditor />} />
+  <Route path="/chat" element={<ChatPage />} /> {/* Atualizado para /chat */}
+  <Route
+    path="/contacts"
+    element={
+      <MainLayout>
+        <Contacts />
+      </MainLayout>
+    }
+  />
+  <Route
+    path="/settings"
+    element={
+      <MainLayout>
+        <SettingsPage />
+      </MainLayout>
+    }
+  />
+</Routes>
     </Router>
   );
 };
