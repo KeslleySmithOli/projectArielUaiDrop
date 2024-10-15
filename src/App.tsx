@@ -7,7 +7,8 @@ import ConversationList from './components/ConversationList';
 import ChatWindow from './components/ChatWindow'; 
 import FlowEditor from './pages/FlowEditor';
 import GlobalStyle from './styles/GlobalStyle';
-import Contacts from './components/Contact'; // Certifique-se de que o caminho está correto
+import Contacts from './components/Contact';
+import SettingsPage from './pages/SettingsPage';
 import 'emoji-mart/css/emoji-mart.css';
 
 const AppContainer = styled.div`
@@ -20,6 +21,7 @@ const App: React.FC = () => {
     <Router>
       <GlobalStyle />
       <Routes>
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/" element={<Login />} />
         <Route path="/flows" element={<FlowEditor />} />
         
