@@ -14,7 +14,7 @@ import FlowEditor from "./pages/FlowEditor";
 import GlobalStyle from "./styles/GlobalStyle";
 import Contacts from "./components/Contacts";
 import "emoji-mart/css/emoji-mart.css";
-
+import SettingsPage from './pages/SettingsPage';
 const AppContainer = styled.div`
   display: flex;
   height: 100vh;
@@ -54,6 +54,7 @@ const App: React.FC = () => {
     <Router>
       <GlobalStyle />
       <Routes>
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/" element={<Login />} />
         <Route path="/flows" element={<FlowEditor />} />
         <Route path="/chat/:chatId" element={<ChatPage />} />
