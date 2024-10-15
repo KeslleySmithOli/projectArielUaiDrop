@@ -14,10 +14,17 @@ import FlowEditor from "./pages/FlowEditor";
 import GlobalStyle from "./styles/GlobalStyle";
 import Contacts from "./components/Contacts";
 import "emoji-mart/css/emoji-mart.css";
-import SettingsPage from './pages/SettingsPage';
+import SettingsPage from "./pages/SettingsPage";
+import MainLayout from "./components/MainLayout";
+
 const AppContainer = styled.div`
   display: flex;
   height: 100vh;
+`;
+
+const ContentContainer = styled.div`
+  flex: 1;
+  overflow-y: auto;
 `;
 
 const ChatPage: React.FC = () => {
@@ -54,18 +61,24 @@ const App: React.FC = () => {
     <Router>
       <GlobalStyle />
       <Routes>
-        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/" element={<Login />} />
         <Route path="/flows" element={<FlowEditor />} />
         <Route path="/chat/:chatId" element={<ChatPage />} />
         <Route
           path="/contacts"
           element={
-            <AppContainer>
-              <Sidebar />
+            <MainLayout>
               <Contacts />
-            </AppContainer>
+            </MainLayout>
           }
+        />
+        <Route
+           path="/settings"
+           element={
+             <MainLayout>
+               <SettingsPage />
+             </MainLayout>
+           }
         />
       </Routes>
     </Router>
