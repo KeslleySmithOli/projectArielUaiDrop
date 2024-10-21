@@ -16,6 +16,8 @@ import Contacts from "./components/Contacts";
 import "emoji-mart/css/emoji-mart.css";
 import SettingsPage from "./pages/SettingsPage";
 import MainLayout from "./components/MainLayout";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 const AppContainer = styled.div`
   display: flex;
